@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>Stank AI Platinum</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23c4a44a'/><text x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='18' fill='%23111'>S</text></svg>">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg:#0c0b0e;
+            --surface:#141318;
+            --surface-2:#1c1b22;
+            --platinum:#c4a44a;
+            --platinum-light:#e2cc7a;
+            --platinum-dim:#8a7234;
+            --text:#e8e6e1;
+            --text-dim:#8a8780;
+            --accent:#c4a44a;
+            --font-display:'Instrument Serif',Georgia,serif;
+            --font-body:'DM Sans',system-ui,sans-serif;
+        }
+        html{scroll-behavior:smooth;font-size:16px}
+        body{
+            background:var(--bg);
+            color:var(--text);
+            font-family:var(--font-body);
+            overflow-x:hidden;
+            -webkit-font-smoothing:antialiased;
+        }
+        ::selection{background:var(--platinum);color:var(--bg)}
+
+        /* Grain overlay */
+        body::after{
+            content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+            opacity:.03;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat:repeat;background-size:256px 256px;
+        }
+
+        /* NAV */
+        nav{
+            position:fixed;top:0;left:0;right:0;z-index:100;
+            padding:1.25rem 2.5rem;
+            display:flex;align-items:center;justify-content:space-between;
+            backdrop-filter:blur(20px);
+            background:rgba(12,11,14,.7);
+            border-bottom:1px solid rgba(196,164,74,.06);
+            transition:transform .4s ease;
+        }
+        .nav-logo{
+            font-family:var(--font-display);font-size:1.4rem;
+            color:var(--platinum);letter-spacing:-.02em;
+            text-decoration:none;
+        }
+        .nav-logo span{font-style:italic;color:var(--text);margin-left:.3em;font-weight:400;opacity:.6;font-size:.85em}
+        .nav-links{display:flex;gap:2rem;align-items:center}
+        .nav-links a{
+            font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;
+            color:var(--text-dim);text-decoration:none;
+            transition:color .3s ease;
+        }
+        .nav-links a:hover{color:var(--platinum-light)}
+        .nav-cta{
+            padding:.55rem 1.4rem;
+            background:transparent;border:1px solid var(--platinum-dim);
+            color:var(--platinum);font-family:var(--font-body);
+            font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;
+            cursor:pointer;transition:all .3s ease;
+        }
+        .nav-cta:hover{background:var(--platinum);color:var(--bg);border-color:var(--platinum)}
+
+        /* HERO */
+        .hero{
+            min-height:100vh;display:flex;flex-direction:column;
+            justify-content:center;
+            padding:8rem 2.5rem 4rem;
+            position:relative;
+        }
+        .hero-bg{
+            position:absolute;inset:0;overflow:hidden;
+        }
+        .hero-bg::before{
+            content:'';position:absolute;
+            width:800px;height:800px;
+            top:-20%;right:-10%;
+            background:radial-gradient(circle,rgba(196,164,74,.08) 0%,transparent 70%);
+            animation:pulse 8s ease-in-out infinite alternate;
+        }
+        .hero-bg::after{
+            content:'';position:absolute;
+            width:600px;height:600px;
+            bottom:-10%;left:-5%;
+            background:radial-gradient(circle,rgba(196,164,74,.04) 0%,transparent 70%);
+            animation:pulse 10s ease-in-out 2s infinite alternate;
+        }
+        @keyframes pulse{0%{transform:scale(1);opacity:1}100%{transform:scale(1.15);opacity:.6}}
+
+        .hero-content{position:relative;z-index:2;max-width:1200px;margin:0 auto;width:100%}
+        .hero-tag{
+            font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;
+            color:var(--platinum-dim);margin-bottom:2rem;
+            display:flex;align-items:center;gap:.75rem;
+        }
+        .hero-tag::before{content:'';width:2rem;height:1px;background:var(--platinum-dim)}
+        .hero-title{
+            font-family:var(--font-display);
+            font-size:clamp(3.2rem,8vw,7.5rem);
+            line-height:.92;letter-spacing:-.03em;
+            font-weight:400;
+            margin-bottom:1.5rem;
+        }
+        .hero-title em{
+            font-style:italic;
+            background:linear-gradient(135deg,var(--platinum-light),var(--platinum),var(--platinum-dim));
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            background-clip:text;
+        }
+        .hero-sub{
+            font-size:1.05rem;line-height:1.7;color:var(--text-dim);
+            max-width:480px;margin-bottom:3rem;font-weight:300;
+        }
+        .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+        .btn-primary{
+            padding:.85rem 2.2rem;
+            background:linear-gradient(135deg,var(--platinum),var(--platinum-dim));
+            color:var(--bg);font-family:var(--font-body);font-weight:600;
+            font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;
+            border:none;cursor:pointer;
+            transition:all .35s ease;
+            position:relative;overflow:hidden;
+        }
+        .btn-primary::after{
+            content:'';position:absolute;inset:0;
+            background:linear-gradient(135deg,var(--platinum-light),var(--platinum));
+            opacity:0;transition:opacity .35s ease;
+        }
+        .btn-primary:hover::after{opacity:1}
+        .btn-primary span{position:relative;z-index:1}
+        .btn-ghost{
+            padding:.85rem 2.2rem;
+            background:transparent;border:1px solid var(--surface-2);
+            color:var(--text-dim);font-family:var(--font-body);
+            font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;
+            cursor:pointer;transition:all .3s ease;
+        }
+        .btn-ghost:hover{border-color:var(--platinum-dim);color:var(--platinum)}
+
+        .hero-stats{
+            display:flex;gap:3.5rem;margin-top:5rem;
+            padding-top:2.5rem;border-top:1px solid rgba(196,164,74,.08);
+        }
+        .stat-val{
+            font-family:var(--font-display);font-size:2.2rem;
+            color:var(--platinum-light);line-height:1;
+        }
+        .stat-label{
+            font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+            color:var(--text-dim);margin-top:.5rem;
+        }
+
+        /* MARQUEE */
+        .marquee-wrap{
+            padding:3rem 0;
+            border-top:1px solid rgba(196,164,74,.06);
+            border-bottom:1px solid rgba(196,164,74,.06);
+            overflow:hidden;
+        }
+        .marquee{
+            display:flex;gap:3rem;
+            animation:scroll 25s linear infinite;
+            width:max-content;
+        }
+        .marquee span{
+            font-family:var(--font-display);font-size:1.3rem;
+            color:var(--text-dim);opacity:.25;white-space:nowrap;
+            display:flex;align-items:center;gap:3rem;
+        }
+        .marquee span::after{content:'';width:4px;height:4px;background:var(--platinum-dim);border-radius:50%}
+        @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+        /* FEATURES */
+        .features{padding:8rem 2.5rem;max-width:1200px;margin:0 auto}
+        .section-tag{
+            font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;
+            color:var(--platinum-dim);margin-bottom:1.5rem;
+            display:flex;align-items:center;gap:.75rem;
+        }
+        .section-tag::before{content:'';width:2rem;height:1px;background:var(--platinum-dim)}
+        .section-title{
+            font-family:var(--font-display);font-size:clamp(2rem,4vw,3.5rem);
+            line-height:1.05;letter-spacing:-.02em;margin-bottom:4rem;
+            max-width:600px;
+        }
+        .section-title em{font-style:italic;color:var(--platinum)}
+
+        .features-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:1px;
+            background:rgba(196,164,74,.06);
+        }
+        .feature-card{
+            background:var(--bg);
+            padding:3rem;
+            position:relative;
+            transition:background .4s ease;
+        }
+        .feature-card:hover{background:var(--surface)}
+        .feature-num{
+            font-family:var(--font-display);font-size:3rem;
+            color:rgba(196,164,74,.1);line-height:1;
+            position:absolute;top:1.5rem;right:2rem;
+        }
+        .feature-icon{
+            width:2.5rem;height:2.5rem;margin-bottom:1.5rem;
+            display:flex;align-items:center;justify-content:center;
+        }
+        .feature-icon svg{width:100%;height:100%;stroke:var(--platinum);fill:none;stroke-width:1.5}
+        .feature-name{
+            font-family:var(--font-display);font-size:1.5rem;
+            margin-bottom:.75rem;letter-spacing:-.01em;
+        }
+        .feature-desc{
+            font-size:.88rem;line-height:1.7;color:var(--text-dim);
+            font-weight:300;max-width:320px;
+        }
+
+        /* SHOWCASE */
+        .showcase{
+            padding:6rem 2.5rem 8rem;
+            position:relative;
+        }
+        .showcase-inner{
+            max-width:1200px;margin:0 auto;
+            display:grid;grid-template-columns:1fr 1fr;gap:4rem;
+            align-items:center;
+        }
+        .showcase-visual{
+            aspect-ratio:4/3;background:var(--surface);
+            border:1px solid rgba(196,164,74,.08);
+            position:relative;overflow:hidden;
+            display:flex;align-items:center;justify-content:center;
+        }
+        .showcase-visual::before{
+            content:'';position:absolute;inset:0;
+            background:linear-gradient(135deg,rgba(196,164,74,.04),transparent 60%);
+        }
+        .terminal{
+            width:85%;font-size:.78rem;line-height:1.8;
+            color:var(--text-dim);font-family:'DM Sans',monospace;
+            position:relative;z-index:1;
+        }
+        .terminal-line{opacity:0;animation:typeIn .5s ease forwards}
+        .terminal-line:nth-child(1){animation-delay:.2s}
+        .terminal-line:nth-child(2){animation-delay:.5s}
+        .terminal-line:nth-child(3){animation-delay:.8s}
+        .terminal-line:nth-child(4){animation-delay:1.2s}
+        .terminal-line:nth-child(5){animation-delay:1.6s}
+        .terminal-line:nth-child(6){animation-delay:2s}
+        @keyframes typeIn{to{opacity:1}}
+        .t-prompt{color:var(--platinum)}
+        .t-comment{color:rgba(196,164,74,.3)}
+        .t-string{color:var(--platinum-light)}
+        .t-success{color:#6b9;font-weight:500}
+
+        .showcase-text .section-tag{margin-bottom:1.5rem}
+        .showcase-text h3{
+            font-family:var(--font-display);font-size:clamp(1.8rem,3vw,2.8rem);
+            line-height:1.1;letter-spacing:-.02em;margin-bottom:1.25rem;
+        }
+        .showcase-text h3 em{font-style:italic;color:var(--platinum)}
+        .showcase-text p{
+            font-size:.92rem;line-height:1.75;color:var(--text-dim);
+            font-weight:300;margin-bottom:2rem;max-width:420px;
+        }
+
+        /* PRICING STRIP */
+        .pricing{
+            padding:6rem 2.5rem;
+            border-top:1px solid rgba(196,164,74,.06);
+        }
+        .pricing-inner{max-width:1200px;margin:0 auto}
+        .pricing-cards{
+            display:grid;grid-template-columns:repeat(3,1fr);
+            gap:1px;background:rgba(196,164,74,.06);
+            margin-top:3rem;
+        }
+        .price-card{
+            background:var(--bg);padding:2.5rem;
+            transition:background .3s ease;
+            position:relative;
+        }
+        .price-card:hover{background:var(--surface)}
+        .price-card.featured{
+            background:var(--surface);
+            border-top:2px solid var(--platinum);
+        }
+        .price-card.featured::before{
+            content:'Most Popular';
+            position:absolute;top:-2px;right:2rem;
+            transform:translateY(-100%);
+            font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;
+            color:var(--bg);background:var(--platinum);
+            padding:.35rem .8rem;
+        }
+        .price-tier{
+            font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;
+            color:var(--text-dim);margin-bottom:1.5rem;
+        }
+        .price-val{
+            font-family:var(--font-display);font-size:2.8rem;
+            line-height:1;margin-bottom:.25rem;
+        }
+        .price-val sup{font-size:.45em;vertical-align:super;color:var(--text-dim)}
+        .price-period{font-size:.75rem;color:var(--text-dim);margin-bottom:2rem}
+        .price-features{list-style:none;margin-bottom:2.5rem}
+        .price-features li{
+            font-size:.82rem;color:var(--text-dim);
+            padding:.5rem 0;
+            border-bottom:1px solid rgba(196,164,74,.04);
+            display:flex;align-items:center;gap:.6rem;
+        }
+        .price-features li::before{
+            content:'';width:5px;height:5px;
+            background:var(--platinum-dim);border-radius:50%;
+            flex-shrink:0;
+        }
+        .price-btn{
+            width:100%;padding:.75rem;
+            font-family:var(--font-body);font-size:.75rem;
+            letter-spacing:.1em;text-transform:uppercase;
+            cursor:pointer;transition:all .3s ease;
+        }
+        .price-btn-fill{
+            background:var(--platinum);color:var(--bg);
+            border:1px solid var(--platinum);font-weight:600;
+        }
+        .price-btn-fill:hover{background:var(--platinum-light)}
+        .price-btn-outline{
+            background:transparent;color:var(--text-dim);
+            border:1px solid var(--surface-2);
+        }
+        .price-btn-outline:hover{border-color:var(--platinum-dim);color:var(--platinum)}
+
+        /* FOOTER */
+        footer{
+            padding:4rem 2.5rem 2.5rem;
+            border-top:1px solid rgba(196,164,74,.06);
+        }
+        .footer-inner{
+            max-width:1200px;margin:0 auto;
+            display:flex;justify-content:space-between;align-items:flex-start;
+            flex-wrap:wrap;gap:2rem;
+        }
+        .footer-brand{
+            font-family:var(--font-display);font-size:1.2rem;
+            color:var(--platinum);margin-bottom:.5rem;
+        }
+        .footer-brand span{font-style:italic;color:var(--text-dim);margin-left:.3em;font-size:.85em;opacity:.5}
+        .footer-copy{font-size:.75rem;color:var(--text-dim);opacity:.5}
+        .footer-links{display:flex;gap:3rem}
+        .footer-col h4{
+            font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;
+            color:var(--text-dim);margin-bottom:.75rem;
+        }
+        .footer-col a{
+            display:block;font-size:.82rem;color:var(--text-dim);
+            text-decoration:none;padding:.25rem 0;
+            transition:color .3s ease;opacity:.6;
+        }
+        .footer-col a:hover{color:var(--platinum);opacity:1}
+
+        /* REVEAL ANIMATION */
+        .reveal{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.23,1,.32,1)}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+
+        /* RESPONSIVE */
+        @media(max-width:900px){
+            nav{padding:1rem 1.5rem}
+            .nav-links{display:none}
+            .hero{padding:7rem 1.5rem 3rem}
+            .hero-stats{gap:2rem;flex-wrap:wrap}
+            .features{padding:5rem 1.5rem}
+            .features-grid{grid-template-columns:1fr}
+            .showcase-inner{grid-template-columns:1fr;gap:2rem}
+            .pricing{padding:5rem 1.5rem}
+            .pricing-cards{grid-template-columns:1fr}
+            .footer-inner{flex-direction:column}
+            .footer-links{gap:2rem;flex-wrap:wrap}
+        }
+        @media(max-width:600px){
+            .hero-title{font-size:2.6rem}
+            .hero-sub{font-size:.92rem}
+            .hero-actions{flex-direction:column;align-items:flex-start}
+            .btn-primary,.btn-ghost{width:100%;text-align:center}
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="#" class="nav-logo">Stank AI <span>Platinum</span></a>
+    <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#platform">Platform</a>
+        <a href="#pricing">Pricing</a>
+    </div>
+    <button class="nav-cta">Get Access</button>
+</nav>
+
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <div class="hero-tag">Platinum-tier intelligence</div>
+        <h1 class="hero-title">
+            The AI that<br>thinks <em>different</em>
+        </h1>
+        <p class="hero-sub">
+            Stank AI Platinum delivers raw computational power wrapped in
+            an interface that stays out of your way. Built for makers who
+            ship fast and break conventions.
+        </p>
+        <div class="hero-actions">
+            <button class="btn-primary"><span>Start Building</span></button>
+            <button class="btn-ghost">View Docs</button>
+        </div>
+        <div class="hero-stats">
+            <div>
+                <div class="stat-val">2.3M</div>
+                <div class="stat-label">Requests / day</div>
+            </div>
+            <div>
+                <div class="stat-val">14ms</div>
+                <div class="stat-label">Avg latency</div>
+            </div>
+            <div>
+                <div class="stat-val">99.97%</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+            <div>
+                <div class="stat-val">187</div>
+                <div class="stat-label">Countries</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="marquee-wrap">
+    <div class="marquee">
+        <span>Natural Language Processing</span>
+        <span>Generative Models</span>
+        <span>Real-time Inference</span>
+        <span>Multi-modal Reasoning</span>
+        <span>Code Generation</span>
+        <span>Semantic Search</span>
+        <span>Knowledge Graphs</span>
+        <span>Agentic Workflows</span>
+        <span>Natural Language Processing</span>
+        <span>Generative Models</span>
+        <span>Real-time Inference</span>
+        <span>Multi-modal Reasoning</span>
+        <span>Code Generation</span>
+        <span>Semantic Search</span>
+        <span>Knowledge Graphs</span>
+        <span>Agentic Workflows</span>
+    </div>
+</div>
+
+<section class="features" id="features">
+    <div class="section-tag reveal">Capabilities</div>
+    <h2 class="section-title reveal">
+        Four pillars of <em>platinum</em> intelligence
+    </h2>
+    <div class="features-grid">
+        <div class="feature-card reveal">
+            <div class="feature-num">01</div>
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <div class="feature-name">Multi-layer Reasoning</div>
+            <p class="feature-desc">
+                Processes context through stacked inference layers,
+                producing responses with depth most models can't reach.
+                Handles ambiguity without hallucinating.
+            </p>
+        </div>
+        <div class="feature-card reveal">
+            <div class="feature-num">02</div>
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            </div>
+            <div class="feature-name">Instant Inference</div>
+            <p class="feature-desc">
+                Optimized for latency-critical applications. Responses
+                stream in under 14ms on average, backed by edge
+                deployments across 38 global regions.
+            </p>
+        </div>
+        <div class="feature-card reveal">
+            <div class="feature-num">03</div>
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <div class="feature-name">Structured Output</div>
+            <p class="feature-desc">
+                Returns clean JSON, tables, and typed schemas
+                on demand. Integrates directly into pipelines
+                without brittle parsing or post-processing.
+            </p>
+        </div>
+        <div class="feature-card reveal">
+            <div class="feature-num">04</div>
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="feature-name">Hardened Security</div>
+            <p class="feature-desc">
+                SOC 2 compliant with end-to-end encryption. Your
+                prompts and data never leave the inference boundary.
+                Zero retention by default.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="showcase" id="platform">
+    <div class="showcase-inner">
+        <div class="showcase-visual reveal">
+            <div class="terminal">
+                <div class="terminal-line"><span class="t-comment">// Initialize Stank AI Platinum</span></div>
+                <div class="terminal-line"><span class="t-prompt">const</span> stank = <span class="t-prompt">new</span> StankAI({ tier: <span class="t-string">'platinum'</span> })</div>
+                <div class="terminal-line">&nbsp;</div>
+                <div class="terminal-line"><span class="t-prompt">const</span> result = <span class="t-prompt">await</span> stank.generate({</div>
+                <div class="terminal-line">&nbsp;&nbsp;prompt: <span class="t-string">'Analyze market trends for Q2'</span>,</div>
+                <div class="terminal-line">&nbsp;&nbsp;format: <span class="t-string">'structured'</span></div>
+                <div class="terminal-line">})</div>
+                <div class="terminal-line">&nbsp;</div>
+                <div class="terminal-line"><span class="t-success">// Response in 11ms - 2,847 tokens</span></div>
+            </div>
+        </div>
+        <div class="showcase-text reveal">
+            <div class="section-tag">Developer experience</div>
+            <h3>Three lines to <em>production</em></h3>
+            <p>
+                No boilerplate. No config files. Initialize the client,
+                call the API, ship. The SDK handles retries, streaming,
+                and type safety so you don't have to.
+            </p>
+            <button class="btn-primary"><span>Read the Docs</span></button>
+        </div>
+    </div>
+</section>
+
+<section class="pricing" id="pricing">
+    <div class="pricing-inner">
+        <div class="section-tag reveal">Pricing</div>
+        <h2 class="section-title reveal">
+            Scale without <em>surprises</em>
+        </h2>
+        <div class="pricing-cards">
+            <div class="price-card reveal">
+                <div class="price-tier">Starter</div>
+                <div class="price-val">$0<sup>/mo</sup></div>
+                <div class="price-period">Free forever for small projects</div>
+                <ul class="price-features">
+                    <li>10K requests per month</li>
+                    <li>Standard latency</li>
+                    <li>Community support</li>
+                    <li>Basic analytics</li>
+                </ul>
+                <button class="price-btn price-btn-outline">Get Started</button>
+            </div>
+            <div class="price-card featured reveal">
+                <div class="price-tier">Platinum</div>
+                <div class="price-val">$79<sup>/mo</sup></div>
+                <div class="price-period">For teams that ship daily</div>
+                <ul class="price-features">
+                    <li>Unlimited requests</li>
+                    <li>Priority edge routing</li>
+                    <li>Dedicated support channel</li>
+                    <li>Advanced analytics + logs</li>
+                    <li>Custom fine-tuning</li>
+                </ul>
+                <button class="price-btn price-btn-fill">Upgrade to Platinum</button>
+            </div>
+            <div class="price-card reveal">
+                <div class="price-tier">Enterprise</div>
+                <div class="price-val">Custom</div>
+                <div class="price-period">For orgs with serious scale</div>
+                <ul class="price-features">
+                    <li>Dedicated infrastructure</li>
+                    <li>SLA with uptime guarantee</li>
+                    <li>SSO + role management</li>
+                    <li>On-prem deployment option</li>
+                    <li>24/7 engineering support</li>
+                </ul>
+                <button class="price-btn price-btn-outline">Contact Sales</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-inner">
+        <div>
+            <div class="footer-brand">Stank AI <span>Platinum</span></div>
+            <div class="footer-copy">2026 Stank AI, Inc.</div>
+        </div>
+        <div class="footer-links">
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="#">Features</a>
+                <a href="#">Pricing</a>
+                <a href="#">Changelog</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="#">Documentation</a>
+                <a href="#">API Reference</a>
+                <a href="#">Status</a>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="#">About</a>
+                <a href="#">Blog</a>
+                <a href="#">Careers</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Nav hide on scroll down, show on scroll up
+    let lastScroll = 0;
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+        const current = window.scrollY;
+        if (current > lastScroll && current > 100) {
+            nav.style.transform = 'translateY(-100%)';
+        } else {
+            nav.style.transform = 'translateY(0)';
+        }
+        lastScroll = current;
+    }, { passive: true });
+</script>
+
+</body>
+</html>
